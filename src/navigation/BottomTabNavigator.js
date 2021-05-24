@@ -1,8 +1,8 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { HomeScreen } from '../screens/HomeScreen';
-import { NewTrainingScreen } from '../screens/NewTrainingScreen';
+import TrainingsList from '../features/trainings/TrainingsList';
+import AddTrainingForm from '../features/trainings/AddTrainingForm';
 
 
 const BottomTab = createBottomTabNavigator()
@@ -10,28 +10,28 @@ const BottomTab = createBottomTabNavigator()
 export const BottomTabNavigator = () => {
     return (
         <BottomTab.Navigator>
-            <BottomTab.Screen name="HomeNavigator" component={HomeNavigator}/>
-            <BottomTab.Screen name="NewTrainingNavigator" component={NewTrainingNavigator}/>
+            <BottomTab.Screen name="TrainingsListNavigator" component={TrainingsListNavigator}/>
+            <BottomTab.Screen name="AddTrainingFormNavigator" component={AddTrainingFormNavigator}/>
         </BottomTab.Navigator>
     )
 }
 
-const HomeStack = createStackNavigator()
+const TrainingsListStack = createStackNavigator()
 
-const HomeNavigator = () => {
+const TrainingsListNavigator = () => {
     return (
-        <HomeStack.Navigator>
-            <HomeStack.Screen name="HomeScreen" component={HomeScreen} />
-        </HomeStack.Navigator>
+        <TrainingsListStack.Navigator>
+            <TrainingsListStack.Screen name="TrainingsList" component={TrainingsList} />
+        </TrainingsListStack.Navigator>
     )
 }
 
-const NewTrainingStack = createStackNavigator()
+const AddTrainingFormStack = createStackNavigator()
 
-const NewTrainingNavigator = () => {
+const AddTrainingFormNavigator = () => {
     return (
-        <HomeStack.Navigator>
-            <HomeStack.Screen name="NewTrainingScreen" component={NewTrainingScreen} />
-        </HomeStack.Navigator>
+        <AddTrainingFormStack.Navigator>
+            <AddTrainingFormStack.Screen name="AddTrainingForm" component={AddTrainingForm} />
+        </AddTrainingFormStack.Navigator>
     )
 }
