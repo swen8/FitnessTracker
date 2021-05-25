@@ -2,7 +2,6 @@ import React from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { useSelector } from 'react-redux'
 import TrainingListView from '../../components/TrainingListView'
-import TrainingView from '../../components/TrainingView'
 import { colors } from '../../utils/colors'
 
 const TrainingsList = ({navigation}) => {
