@@ -28,11 +28,11 @@ export default TrainingListView
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        marginBottom: 15,
+        marginTop: 15,
         marginRight: 10,
         marginLeft: 10,
         backgroundColor: colors.mediumDark,
-        borderRadius: 15,
+        borderRadius: 10,
         padding: 10
     },
     name: {

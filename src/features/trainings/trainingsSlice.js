@@ -69,9 +69,7 @@ const tempTrainingslist = {
 const trainingsSlice = createSlice({
     name: 'trainings',
     initialState: tempTrainingslist,
-    reducers: {
-
-    }
+    reducers: { }
 })
 
 export default trainingsSlice.reducer

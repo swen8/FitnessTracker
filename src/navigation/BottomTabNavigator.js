@@ -2,7 +2,7 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import TrainingsList from '../features/trainings/TrainingsList';
-import AddTrainingForm from '../features/trainings/AddTrainingForm';
+import AddTrainingForm from '../features/add-trainings/AddTrainingForm';
 import TrainingView from '../components/TrainingView';
 import { colors } from '../utils/colors';
 
@@ -19,12 +19,11 @@ export const BottomTabNavigator = () => {
                 inactiveBackgroundColor: colors.dark,
                 style: {
                     backgroundColor: colors.dark,
-                    paddingBottom: 3
               }
             }}
         >
             <BottomTab.Screen name="TrainingsListNavigator" component={TrainingsListNavigator}/>
-            <BottomTab.Screen name="AddTrainingFormNavigator" component={AddTrainingFormNavigator}/>
+            <BottomTab.Screen name="AddTrainingFormNavigator" component={AddTrainingFormNavigator} />
         </BottomTab.Navigator>
     )
 }
@@ -38,6 +37,8 @@ const TrainingsListNavigator = () => {
                 title: "Trainingsliste",
                 headerStyle: {
                     backgroundColor: colors.dark,
+                    borderBottomWidth: 1,
+                    borderBottomColor: colors.orange
                 },
                 headerTintColor: colors.white
             }}/>
@@ -51,7 +52,7 @@ const AddTrainingFormStack = createStackNavigator()
 const AddTrainingFormNavigator = () => {
     return (
         <AddTrainingFormStack.Navigator>
-            <AddTrainingFormStack.Screen name="AddTrainingForm" component={AddTrainingForm} />
+            <AddTrainingFormStack.Screen name="AddTrainingForm" component={AddTrainingForm} options={{headerShown: false}}/>
         </AddTrainingFormStack.Navigator>
     )
 }
