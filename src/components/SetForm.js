@@ -14,7 +14,6 @@ const SetForm = ({index, exerciseIndex}) => {
     const set = useSelector(state => state.addTraining.exercises[exerciseIndex].sets[index])
     const dispatch = useDispatch()
 
-    console.log(set)
 
     const onPressAddSet = () => {
         dispatch(addSet(exerciseIndex))

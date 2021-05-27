@@ -1,18 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+    name: undefined,
+    exercises: []
+}
 
 const addTrainingSlice = createSlice({
     name: "addTraining",
-    initialState: {
-        name: undefined,
-        exercises: []
-    },
+    initialState: initialState,
     reducers: {
         setTrainingType: (state, action) => {
             state.name = action.payload
         },
         addExercise: (state, action) => {
-            state.exercises.push({ name: action.payload, sets:[{}] })
+            const {name, type} = action.payload
+            state.exercises.push({ name: name, type: type, sets:[{}] })
         },
         removeExercise: (state, action) => {
             state.exercises.splice(action.payload, 1)
@@ -28,10 +30,13 @@ const addTrainingSlice = createSlice({
             const set = state.exercises[exerciseIndex].sets[setIndex]
 
             set[name] = value
+        },
+        resetTraining: (state) => {
+            state = initialState
         }
     }
 })
 
-export const { setTrainingType, addExercise, removeExercise, addSet, logTraining, editSet } = addTrainingSlice.actions
+export const { setTrainingType, addExercise, removeExercise, addSet, logTraining, editSet, resetTraining } = addTrainingSlice.actions
 
 export default addTrainingSlice.reducer

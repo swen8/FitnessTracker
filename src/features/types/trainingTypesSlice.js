@@ -2,15 +2,15 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
     1: {
-        id: "pull",
+        id: "pullTraining",
         name: "Pull Training"
     },
     2: {
-        id: "push",
+        id: "pushTraining",
         name: "Push Training"
     },
     3: {
-        id: "legs",
+        id: "legsTraining",
         name: "Legs Training"
     }
 }

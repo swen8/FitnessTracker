@@ -6,9 +6,10 @@ import { colors } from '../../utils/colors'
 import { Ionicons, EvilIcons } from '@expo/vector-icons';
 
 
-import { addExercise, setTrainingType, logTraining } from './addTrainingSlice'
+import { addExercise, setTrainingType, logTraining, resetTraining } from './addTrainingSlice'
 import ExerciseForm from '../../components/ExerciseForm'
 import SelectModal from '../../components/SelectModal'
+import { saveNewTraining } from '../../parse-api/parseapi'
 
 export default function AddTrainingForm() {
 
@@ -43,7 +44,8 @@ export default function AddTrainingForm() {
     }
 
     const onPressFinishTraining = () => {
-
+        saveNewTraining(training)
+        dispatch(resetTraining())
     }
 
     return (
@@ -72,7 +74,7 @@ export default function AddTrainingForm() {
                 <Pressable disabled={!hasSelectedTrainingType} onPress={onPressAddExercise}>
                     <Ionicons name="add-circle" size={48} color={hasSelectedTrainingType ? colors.orange : colors.mediumDark} />
                 </Pressable>
-                <Pressable onPress={() => {dispatch(logTraining())}}>
+                <Pressable disabled={!hasSelectedTrainingType} onPress={onPressFinishTraining}>
                     <Ionicons name="checkmark-circle" size={48} color={hasSelectedTrainingType ? colors.orange : colors.mediumDark} />
                 </Pressable>
             </View>

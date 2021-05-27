@@ -5,11 +5,12 @@ import { colors } from '../utils/colors'
 
 const SelectModal = ({setShowModal, dispatchFunction, text}) => {
     const [exerciseName, setExerciseName] = useState()
+    const [exerciseType, setExerciseType] = useState("reps")
     
     const dispatch = useDispatch()
 
     const onPressConfirm = () => {
-        dispatch(dispatchFunction(exerciseName))
+        dispatch(dispatchFunction({name: exerciseName, type: exerciseType}))
         setShowModal(false)
     }
 
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         borderWidth: 1,
-        borderColor: colors.orange,
+        borderColor: colors.mediumDark,
         borderRadius: 10,
         width: '90%',
         backgroundColor: colors.mediumDark,
