@@ -1,24 +1,26 @@
 import React, { useState } from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import ModalSelector from 'react-native-modal-selector'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import { colors } from '../../utils/colors'
 import { Ionicons, EvilIcons } from '@expo/vector-icons';
 
 
-import { addExercise, setTrainingType } from './addTrainingSlice'
+import { addExercise, setTrainingType, logTraining } from './addTrainingSlice'
 import ExerciseForm from '../../components/ExerciseForm'
+import SelectModal from '../../components/SelectModal'
 
 export default function AddTrainingForm() {
 
+    const [showAddExerciseModal, setShowAddExerciseModal] = useState(false)
+
     const trainingTypes = useSelector(state => state.trainingTypes)
-    const selectedTrainingType = useSelector(state => state.addTraining.name)
-    const hasSelectedTrainingType = selectedTrainingType !== undefined
+    const training = useSelector(state => state.addTraining)
+    const hasSelectedTrainingType = training.name !== undefined
     const exercises = useSelector(state => state.addTraining.exercises)
 
     const dispatch = useDispatch()
 
-    console.log(exercises)
 
     const getFormattedDate = () => {
         const today = new Date();
@@ -31,19 +33,16 @@ export default function AddTrainingForm() {
 
     const onChange = (option) => {
         if(option !== undefined){
-            if(selectedTrainingType !== null){ 
-                //TODO: Check change 
-                dispatch(setTrainingType(trainingTypes[option].id))
-            }
-            else {
-                dispatch(setTrainingType(trainingTypes[option].id))
-            }
+            dispatch(setTrainingType(trainingTypes[option].id))
         }
         
     }
 
     const onPressAddExercise = () => {
-        dispatch(addExercise("Test Exercise"))
+        setShowAddExerciseModal(true)
+    }
+
+    const onPressFinishTraining = () => {
 
     }
 
@@ -56,7 +55,7 @@ export default function AddTrainingForm() {
                     labelExtractor={item => trainingTypes[item].name}
                     initValue= "Select Training Type"
                     onChange={(option)=> onChange(option)}
-                    selectedKey={selectedTrainingType}
+                    selectedKey={training.name}
                     selectTextStyle={styles.name}
                 />
                 <Text style={styles.date}>{getFormattedDate()}</Text>
@@ -64,7 +63,7 @@ export default function AddTrainingForm() {
             <View style={styles.contentContainer}>
                 <FlatList
                     data={exercises}
-                    renderItem={({item, index}) => <ExerciseForm exercise={item} index={index} />}
+                    renderItem={({item, index}) => <ExerciseForm exercise={item} exerciseIndex={index} />}
                     keyExtractor={(item, index) => index.toString()}
                 />
             </View>
@@ -73,10 +72,13 @@ export default function AddTrainingForm() {
                 <Pressable disabled={!hasSelectedTrainingType} onPress={onPressAddExercise}>
                     <Ionicons name="add-circle" size={48} color={hasSelectedTrainingType ? colors.orange : colors.mediumDark} />
                 </Pressable>
-                <Pressable>
+                <Pressable onPress={() => {dispatch(logTraining())}}>
                     <Ionicons name="checkmark-circle" size={48} color={hasSelectedTrainingType ? colors.orange : colors.mediumDark} />
                 </Pressable>
             </View>
+            {showAddExerciseModal &&
+                <SelectModal setShowModal={setShowAddExerciseModal} dispatchFunction={addExercise} text="Exercise Name"/>
+            }
         </View>
     )
 }
