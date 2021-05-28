@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import Parse from 'parse/react-native';
 
-const tempTrainingslist = {
+/* const tempTrainingslist = {
     "1" : {
         name: "Push",
         date: '20.05.2021',
@@ -64,12 +65,51 @@ const tempTrainingslist = {
             }
         ]
     }
+} */
+
+const initialState = {
+    data: {},
+    status: 'idle',
+    error: null
 }
+
+export const fetchTrainings = createAsyncThunk('trainings/fetchTrainings', async () => {
+    const Training = Parse.Object.extend('Training');
+    const query = new Parse.Query(Training);
+
+    const results = await query.find()
+    const trainings = {}
+
+    results.forEach(function(trainingData) {
+        trainings[trainingData.id] = {
+            name: trainingData.get('name'),
+            date: trainingData.get('createdAt').toLocaleString(),
+            exercises: []
+        }
+    })
+
+    return trainings
+})
 
 const trainingsSlice = createSlice({
     name: 'trainings',
-    initialState: tempTrainingslist,
-    reducers: { }
+    initialState: initialState,
+    reducers: { },
+    extraReducers: {
+        [fetchTrainings.pending]: (state, action) => {
+            state.status = 'loading'
+        },
+        [fetchTrainings.fulfilled]: (state, action) => {
+            state.status = 'succeeded'
+            state.data = action.payload
+
+            console.log(action.payload)
+        },
+        [fetchTrainings.rejected]: (state, action) => {
+            state.status = 'failed'
+            state.error = action.error.message
+        }
+    }
 })
 
 export default trainingsSlice.reducer

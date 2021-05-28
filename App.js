@@ -15,7 +15,7 @@ Parse.setAsyncStorage(AsyncStorage);
 //Paste below the Back4App Application ID AND the JavaScript KEY
 Parse.initialize('qRaU3QGPcBghVwTo17Ct94GdKkeHGjh4w0ALhcnq', 'AYlsaGfmP8Jc9zJcxVNte3Hj5LF7aK6OUULQ6s6W');
 //Point to Back4App Parse API address 
-Parse.serverURL = 'https://parseapi.back4app.com/'
+Parse.serverURL = 'https://fitnesstracker.b4a.io/'
 
 
 export default function App() {

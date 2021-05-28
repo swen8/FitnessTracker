@@ -1,13 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import TrainingListView from '../../components/TrainingListView'
 import { colors } from '../../utils/colors'
+import { fetchTrainings } from './trainingsSlice'
 
 const TrainingsList = ({navigation}) => {
-    const trainings = useSelector(state => state.trainings)
+    const trainings = useSelector(state => state.trainings.data)
+    const trainingStatus = useSelector(state => state.trainings.status)
 
-    
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (trainingStatus === 'idle') {
+          dispatch(fetchTrainings())
+        }
+    }, [trainingStatus, dispatch])
 
     return (
         <View style={styles.container}>

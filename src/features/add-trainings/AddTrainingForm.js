@@ -3,7 +3,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import ModalSelector from 'react-native-modal-selector'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import { colors } from '../../utils/colors'
-import { Ionicons, EvilIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 
 import { addExercise, setTrainingType, logTraining, resetTraining } from './addTrainingSlice'

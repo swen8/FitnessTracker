@@ -5,6 +5,7 @@ import TrainingsList from '../features/trainings/TrainingsList';
 import AddTrainingForm from '../features/add-trainings/AddTrainingForm';
 import TrainingView from '../components/TrainingView';
 import { colors } from '../utils/colors';
+import { Ionicons } from '@expo/vector-icons';
 
 
 const BottomTab = createBottomTabNavigator()
@@ -19,8 +20,23 @@ export const BottomTabNavigator = () => {
                 inactiveBackgroundColor: colors.dark,
                 style: {
                     backgroundColor: colors.dark,
-              }
+                },
+                showLabel: false
             }}
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName
+                    const iconColor = focused ? colors.orange : colors.mediumWhite
+
+                    if (route.name === 'TrainingsListNavigator') {
+                        iconName = focused ? 'list' : 'list-outline';                       
+                    } else if (route.name === 'AddTrainingFormNavigator') {
+                        iconName = focused ? 'add-circle' : 'add-circle-outline';
+                    }
+
+                    return <Ionicons name={iconName} size={32} color={iconColor} />
+                },
+            })}
         >
             <BottomTab.Screen name="TrainingsListNavigator" component={TrainingsListNavigator}/>
             <BottomTab.Screen name="AddTrainingFormNavigator" component={AddTrainingFormNavigator} />
@@ -34,7 +50,7 @@ const TrainingsListNavigator = () => {
     return (
         <TrainingsListStack.Navigator>
             <TrainingsListStack.Screen name="TrainingsList" component={TrainingsList} options={{
-                title: "Trainingsliste",
+                title: "Trainings",
                 headerStyle: {
                     backgroundColor: colors.dark,
                     borderBottomWidth: 1,
