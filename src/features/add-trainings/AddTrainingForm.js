@@ -8,10 +8,10 @@ import { Ionicons, EvilIcons } from '@expo/vector-icons';
 
 import { addExercise, setTrainingType, logTraining, resetTraining } from './addTrainingSlice'
 import ExerciseForm from '../../components/ExerciseForm'
-import SelectModal from '../../components/SelectModal'
-import { saveNewTraining } from '../../parse-api/parseapi'
+import AddExerciseModal from '../../components/AddExerciseModal'
+import { addNewTraining } from '../../parse-api/parseapi'
 
-export default function AddTrainingForm() {
+export default function AddTrainingForm({navigation}) {
 
     const [showAddExerciseModal, setShowAddExerciseModal] = useState(false)
 
@@ -19,6 +19,7 @@ export default function AddTrainingForm() {
     const training = useSelector(state => state.addTraining)
     const hasSelectedTrainingType = training.name !== undefined
     const exercises = useSelector(state => state.addTraining.exercises)
+    const hasExercise = exercises.length > 0
 
     const dispatch = useDispatch()
 
@@ -44,8 +45,9 @@ export default function AddTrainingForm() {
     }
 
     const onPressFinishTraining = () => {
-        saveNewTraining(training)
+        addNewTraining(training)
         dispatch(resetTraining())
+        navigation.navigate("TrainingsList")
     }
 
     return (
@@ -74,12 +76,12 @@ export default function AddTrainingForm() {
                 <Pressable disabled={!hasSelectedTrainingType} onPress={onPressAddExercise}>
                     <Ionicons name="add-circle" size={48} color={hasSelectedTrainingType ? colors.orange : colors.mediumDark} />
                 </Pressable>
-                <Pressable disabled={!hasSelectedTrainingType} onPress={onPressFinishTraining}>
-                    <Ionicons name="checkmark-circle" size={48} color={hasSelectedTrainingType ? colors.orange : colors.mediumDark} />
+                <Pressable disabled={!hasExercise} onPress={onPressFinishTraining}>
+                    <Ionicons name="checkmark-circle" size={48} color={hasExercise ? colors.orange : colors.mediumDark} />
                 </Pressable>
             </View>
             {showAddExerciseModal &&
-                <SelectModal setShowModal={setShowAddExerciseModal} dispatchFunction={addExercise} text="Exercise Name"/>
+                <AddExerciseModal setShowModal={setShowAddExerciseModal} dispatchFunction={addExercise} text="Exercise Name"/>
             }
         </View>
     )

@@ -32,7 +32,8 @@ const addTrainingSlice = createSlice({
             set[name] = value
         },
         resetTraining: (state) => {
-            state = initialState
+            state.name = undefined
+            state.exercises = []
         }
     }
 })

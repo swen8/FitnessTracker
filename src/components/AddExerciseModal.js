@@ -3,24 +3,31 @@ import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-nativ
 import { useDispatch } from 'react-redux'
 import { colors } from '../utils/colors'
 
-const SelectModal = ({setShowModal, dispatchFunction, text}) => {
+const AddExerciseModal = ({setShowModal, dispatchFunction, text}) => {
     const [exerciseName, setExerciseName] = useState()
     const [exerciseType, setExerciseType] = useState("reps")
     
     const dispatch = useDispatch()
 
+    const hasExerciseName = exerciseName !== undefined && exerciseName.length > 0
+
     const onPressConfirm = () => {
-        dispatch(dispatchFunction({name: exerciseName, type: exerciseType}))
-        setShowModal(false)
+        if(exerciseName !== undefined && exerciseName.length > 0) {
+            dispatch(dispatchFunction({name: exerciseName, type: exerciseType}))
+            setShowModal(false)
+        }
+        else {
+            alert("Please select a exercise name.")
+        }
     }
 
     return (
         <Modal
-            animationType='slide'
             transparent={true}
+            onRequestClose={() => setShowModal(false)}
         >
-            <View style={styles.container}>
-                <View style={styles.contentContainer}>
+            <Pressable style={styles.container} onPress={() => setShowModal(false)}>
+                <Pressable style={styles.contentContainer}>
                     <Text style={styles.text}>{text}</Text>
                     <TextInput 
                         style={styles.textInput} 
@@ -37,13 +44,13 @@ const SelectModal = ({setShowModal, dispatchFunction, text}) => {
                             <Text style={styles.cancelButtonText}>Cancel</Text>
                         </Pressable>
                     </View>               
-                </View>
-            </View>
+                </Pressable>
+            </Pressable>
         </Modal>
     )
 }
 
-export default SelectModal
+export default AddExerciseModal
 
 const styles = StyleSheet.create({
     container:{
