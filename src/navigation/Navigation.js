@@ -1,11 +1,20 @@
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native'
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { BottomTabNavigator } from './BottomTabNavigator';
+import { colors } from '../utils/colors';
+
+const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        background: colors.dark
+    }
+}
 
 export const Navigation = () => {
     return (
-        <NavigationContainer>
+        <NavigationContainer theme={MyTheme}>
             <RootNavigator />
         </NavigationContainer>
     )

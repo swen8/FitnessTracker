@@ -1,19 +1,23 @@
 import React from 'react'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { useSelector } from 'react-redux'
 import { colors } from '../utils/colors'
 
 const TrainingListView = ({training, navigation}) => {
 
-    const onPress = () => {
-        navigation.navigate('TrainingView', {training: training})
-    }
-
+    const trainingTypes = useSelector(state => state.trainingTypes)
+    
     const exerciseNumber = training.exercises.length
+    const trainingName = trainingTypes.find(element => element.key === training.name)?.name ?? training.name
+
+    const onPress = () => {
+        navigation.navigate('TrainingView', { training: training, trainingName: trainingName })
+    }
 
     return (
         <Pressable style={styles.container} onPress={onPress}>
             <View>
-                <Text style={styles.name}>{training.name}</Text>                
+                <Text style={styles.name}>{trainingName}</Text>                
             </View>
             <View style={styles.detailContainer}>
                 <Text style={styles.exerciseNumber}>{exerciseNumber} {exerciseNumber !== 1 ? "Exercises": "Exercise"}</Text>
@@ -27,7 +31,6 @@ export default TrainingListView
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'column',
         marginTop: 15,
         marginRight: 10,
         marginLeft: 10,

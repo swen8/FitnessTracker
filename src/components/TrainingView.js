@@ -5,12 +5,14 @@ import ExerciseView from './ExerciseView'
 
 const TrainingView = ({ navigation, route }) => {
     const training = route.params.training
+    const trainingName = route.params.trainingName
 
+    console.log(route.params)
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={styles.name}>{training.name}</Text>
-                <Text style={styles.date}>{training.date}</Text>
+                <Text style={styles.name}>{trainingName}</Text>
+                <Text style={styles.date}>{training.dateTime}</Text>
             </View>
             <View style={styles.contentContainer}>
                 <FlatList 

@@ -53,7 +53,7 @@ export default function AddTrainingForm({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <ModalSelector 
+                {/* <ModalSelector 
                     data={Object.keys(trainingTypes)}
                     keyExtractor={item => trainingTypes[item].id}
                     labelExtractor={item => trainingTypes[item].name}
@@ -61,7 +61,7 @@ export default function AddTrainingForm({navigation}) {
                     onChange={(option)=> onChange(option)}
                     selectedKey={training.name}
                     selectTextStyle={styles.name}
-                />
+                /> */}
                 <Text style={styles.date}>{getFormattedDate()}</Text>
             </View>
             <View style={styles.contentContainer}>
@@ -69,6 +69,7 @@ export default function AddTrainingForm({navigation}) {
                     data={exercises}
                     renderItem={({item, index}) => <ExerciseForm exercise={item} exerciseIndex={index} />}
                     keyExtractor={(item, index) => index.toString()}
+                    removeClippedSubviews={false}
                 />
             </View>
             <View style={styles.iconContainer}>
@@ -122,7 +123,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginRight: 10,
-        marginLeft: 10
+        marginLeft: 10,
+        
     },
     dummyView: {
         width: 48

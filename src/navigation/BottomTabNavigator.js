@@ -21,7 +21,8 @@ export const BottomTabNavigator = () => {
                 style: {
                     backgroundColor: colors.dark,
                 },
-                showLabel: false
+                showLabel: false,
+                
             }}
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
@@ -48,17 +49,28 @@ const TrainingsListStack = createStackNavigator()
 
 const TrainingsListNavigator = () => {
     return (
-        <TrainingsListStack.Navigator>
-            <TrainingsListStack.Screen name="TrainingsList" component={TrainingsList} options={{
-                title: "Trainings",
-                headerStyle: {
-                    backgroundColor: colors.dark,
-                    borderBottomWidth: 1,
-                    borderBottomColor: colors.orange
-                },
-                headerTintColor: colors.white
-            }}/>
-            <TrainingsListStack.Screen name="TrainingView" component={TrainingView} options={{headerShown: false}}/>
+        <TrainingsListStack.Navigator >
+            <TrainingsListStack.Screen 
+                name="TrainingsList" 
+                component={TrainingsList} 
+                options={{
+                    title: "Trainings",
+                    headerStyle: {
+                        backgroundColor: colors.dark,
+                        borderBottomWidth: 1,
+                        borderBottomColor: colors.orange
+                    },
+                    headerTintColor: colors.white,
+                    animationEnabled: false
+                }}
+            />
+            <TrainingsListStack.Screen 
+                name="TrainingView" 
+                component={TrainingView} 
+                options={{
+                    headerShown: false,
+                    
+                }}/>
         </TrainingsListStack.Navigator>
     )
 }
