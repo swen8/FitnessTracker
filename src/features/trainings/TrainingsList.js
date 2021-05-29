@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import TrainingListView from '../../components/TrainingListView'
 import { colors } from '../../utils/colors'

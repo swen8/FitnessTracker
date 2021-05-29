@@ -80,16 +80,41 @@ export const fetchTrainings = createAsyncThunk('trainings/fetchTrainings', async
     const results = await query.find()
     const trainings = {}
 
-    results.forEach(function(trainingData) {
-        trainings[trainingData.id] = {
-            name: trainingData.get('name'),
-            date: trainingData.get('createdAt').toLocaleString(),
-            exercises: []
+    for (let i = 0; i < results.length; i++) {
+        const currentTraining = results[i];
+        
+        const exercises = await getExercises(currentTraining)
+
+        //Add Training
+        trainings[currentTraining.id] = {
+            id: currentTraining.id,
+            name: currentTraining.get('name'),
+            date: currentTraining.get('createdAt').toLocaleDateString(),
+            dateTime: currentTraining.get('createdAt').toLocaleString(),
+            exercises: exercises
         }
-    })
+    }
 
     return trainings
 })
+
+const getExercises = async (training) => {
+    const Exercise = Parse.Object.extend('Exercise')
+    const exerciseQuery = new Parse.Query(Exercise)
+    exerciseQuery.equalTo('training', training)
+
+    const queriedExercises = await exerciseQuery.find()
+    const exercises = []
+    queriedExercises.forEach(function(exercise) {
+        exercises.push({
+            name: exercise.get('name'),
+            type: exercise.get('type'),
+            sets: exercise.get('sets')
+        })
+    })
+
+    return exercises
+}
 
 const trainingsSlice = createSlice({
     name: 'trainings',
@@ -102,8 +127,6 @@ const trainingsSlice = createSlice({
         [fetchTrainings.fulfilled]: (state, action) => {
             state.status = 'succeeded'
             state.data = action.payload
-
-            console.log(action.payload)
         },
         [fetchTrainings.rejected]: (state, action) => {
             state.status = 'failed'

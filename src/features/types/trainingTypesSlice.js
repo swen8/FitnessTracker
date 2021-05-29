@@ -1,19 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-const initialState = {
-    1: {
-        id: "pullTraining",
+const initialState = [
+    {
+        key: "pullTraining",
         name: "Pull Training"
     },
-    2: {
-        id: "pushTraining",
+    {
+        key: "pushTraining",
         name: "Push Training"
     },
-    3: {
-        id: "legsTraining",
+    {
+        key: "legsTraining",
         name: "Legs Training"
     }
-}
+]
 
 const trainingsSlice = createSlice({
     name: 'trainingTypes',
