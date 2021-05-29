@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
-import ModalSelector from 'react-native-modal-selector'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import { colors } from '../../utils/colors'
 import { Ionicons } from '@expo/vector-icons';
@@ -10,16 +9,20 @@ import { addExercise, setTrainingType, logTraining, resetTraining } from './addT
 import ExerciseForm from '../../components/ExerciseForm'
 import AddExerciseModal from '../../components/AddExerciseModal'
 import { addNewTraining } from '../../parse-api/parseapi'
+import SelectTrainingModal from '../../components/SelectTrainingModal'
 
 export default function AddTrainingForm({navigation}) {
 
     const [showAddExerciseModal, setShowAddExerciseModal] = useState(false)
+    const [showSelectTrainingModal, setShowSelectTrainingModal] = useState(false)
 
     const trainingTypes = useSelector(state => state.trainingTypes)
     const training = useSelector(state => state.addTraining)
     const hasSelectedTrainingType = training.name !== undefined
     const exercises = useSelector(state => state.addTraining.exercises)
     const hasExercise = exercises.length > 0
+    const trainingName = trainingTypes.find(element => element.key === training.name)?.name ?? training.name
+
 
     const dispatch = useDispatch()
 
@@ -53,15 +56,9 @@ export default function AddTrainingForm({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                {/* <ModalSelector 
-                    data={Object.keys(trainingTypes)}
-                    keyExtractor={item => trainingTypes[item].id}
-                    labelExtractor={item => trainingTypes[item].name}
-                    initValue= "Select Training Type"
-                    onChange={(option)=> onChange(option)}
-                    selectedKey={training.name}
-                    selectTextStyle={styles.name}
-                /> */}
+                <Pressable onPress={() => setShowSelectTrainingModal(true)}>
+                    <Text style={styles.name}>{hasSelectedTrainingType ? trainingName : "Select training type.."}</Text>
+                </Pressable>
                 <Text style={styles.date}>{getFormattedDate()}</Text>
             </View>
             <View style={styles.contentContainer}>
@@ -83,6 +80,9 @@ export default function AddTrainingForm({navigation}) {
             </View>
             {showAddExerciseModal &&
                 <AddExerciseModal setShowModal={setShowAddExerciseModal} dispatchFunction={addExercise} text="Exercise Name"/>
+            }
+            {showSelectTrainingModal &&
+                <SelectTrainingModal setShowModal={setShowSelectTrainingModal} dispatchFunction={setTrainingType} text="Training Name"/>
             }
         </View>
     )
@@ -108,7 +108,11 @@ const styles = StyleSheet.create({
     },  
     name: {
         color: colors.white,
-        fontSize : 24,
+        fontSize : 20,
+        borderWidth: 1,
+        borderColor: colors.white,
+        borderRadius: 5,
+        padding: 5
     },
     date: {
         color: colors.white,

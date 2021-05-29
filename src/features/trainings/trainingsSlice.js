@@ -77,6 +77,8 @@ export const fetchTrainings = createAsyncThunk('trainings/fetchTrainings', async
     const Training = Parse.Object.extend('Training');
     const query = new Parse.Query(Training);
 
+    query.descending('createdAt')
+
     const results = await query.find()
     const trainings = {}
 
