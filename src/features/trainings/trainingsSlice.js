@@ -68,9 +68,63 @@ import Parse from 'parse/react-native';
 } */
 
 const initialState = {
-    data: {},
+    data: [],
     status: 'idle',
     error: null
+}
+
+
+export const addTraining = createAsyncThunk('trainings/addTraining', async (trainingData) => {
+    const Training = Parse.Object.extend("Training");
+    
+    const training = new Training();
+    training.set("name", trainingData.name);
+    
+    let trainingResult
+    try {
+        trainingResult = await training.save()
+        //alert('New object created with objectId: ' + result.id);
+    } catch(error) {
+        alert('Failed to create new training, with error code: ' + error.message);
+        return;
+    }
+
+    //Exercises
+    const Exercise = Parse.Object.extend("Exercise");
+
+    for (let i = 0; i < trainingData.exercises.length; i++) { 
+        const exerciseData = trainingData.exercises[i]
+
+        await addNewExercise(Exercise, trainingResult, exerciseData, i)
+    }
+
+    return await getTraining(trainingResult)
+})
+
+const addNewExercise = async (Exercise, trainingResult, exerciseData, index) => {
+    const exercise = new Exercise()
+    exercise.set("number", index)
+    exercise.set("name", exerciseData.name)
+    exercise.set("type", exerciseData.type)
+    exercise.set("sets", selectValidSets(exerciseData.sets, exerciseData.type))
+    exercise.set("training", trainingResult)
+
+    console.log(`save exercise: ${exerciseData.name}`)
+    try {
+        let exerciseResult = await exercise.save()
+        console.log(exerciseResult.id)
+        //alert('New object created with objectId: ' + result.id);
+    } catch(error) {
+        alert('Failed to create new exercise, with error code: ' + error.message);
+    }
+}
+
+const selectValidSets = (sets, type) => {
+    if(type === 'reps') {
+        return sets.filter(set => set.reps !== undefined)
+    }
+
+    return sets
 }
 
 export const fetchTrainings = createAsyncThunk('trainings/fetchTrainings', async () => {
@@ -80,30 +134,33 @@ export const fetchTrainings = createAsyncThunk('trainings/fetchTrainings', async
     query.descending('createdAt')
 
     const results = await query.find()
-    const trainings = {}
+    const trainings = []
 
-    for (let i = 0; i < results.length; i++) {
-        const currentTraining = results[i];
-        
-        const exercises = await getExercises(currentTraining)
-
-        //Add Training
-        trainings[currentTraining.id] = {
-            id: currentTraining.id,
-            name: currentTraining.get('name'),
-            date: currentTraining.get('createdAt').toLocaleDateString(),
-            dateTime: currentTraining.get('createdAt').toLocaleString(),
-            exercises: exercises
-        }
+    for (let i = 0; i < results.length; i++) {   
+        const training  = await getTraining(results[i])     
+        trainings.push(training)
     }
 
     return trainings
 })
 
-const getExercises = async (training) => {
+const getTraining = async (training) => {
+    const exercises = await fetchExercises(training)
+
+    //Add Training
+    return {
+        id: training.id,
+        name: training.get('name'),
+        date: training.get('createdAt').toLocaleDateString(),
+        dateTime: training.get('createdAt').toLocaleString(),
+        exercises: exercises
+    }
+}
+
+const fetchExercises = async (training) => {
     const Exercise = Parse.Object.extend('Exercise')
     const exerciseQuery = new Parse.Query(Exercise)
-    exerciseQuery.equalTo('training', training)
+    exerciseQuery.containedIn('training', [training])
 
     const queriedExercises = await exerciseQuery.find()
     const exercises = []
@@ -133,7 +190,11 @@ const trainingsSlice = createSlice({
         [fetchTrainings.rejected]: (state, action) => {
             state.status = 'failed'
             state.error = action.error.message
-        }
+        },
+
+        [addTraining.fulfilled]: (state, action) => {
+            state.data.unshift(action.payload)
+        },
     }
 })
 

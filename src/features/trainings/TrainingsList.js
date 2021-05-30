@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { FlatList, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import TrainingListView from '../../components/TrainingListView'
 import { colors } from '../../utils/colors'
@@ -19,13 +19,21 @@ const TrainingsList = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <FlatList
-                data={Object.keys(trainings)}
-                renderItem={({item}) => 
-                    <TrainingListView training={trainings[item]} navigation={navigation} />
-                }
-                keyExtractor={(item) => item}
-            />
+            {trainingStatus === 'loading' && 
+                <View style={styles.activityIndicatorContainer}>
+                    <ActivityIndicator size='large' color={colors.mediumWhite}/>
+                </View>
+            }
+            {trainingStatus === 'succeeded' && 
+                <FlatList
+                    data={Object.keys(trainings)}
+                    renderItem={({item}) => 
+                        <TrainingListView training={trainings[item]} navigation={navigation} />
+                    }
+                    keyExtractor={(item) => item}
+                />
+            }
+            
         </View>
     )
 }
@@ -40,6 +48,11 @@ const styles = StyleSheet.create({
     text: {
         color: colors.white,
         fontSize: 20
+    },
+    activityIndicatorContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
 

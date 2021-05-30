@@ -6,6 +6,9 @@ import AddTrainingForm from '../features/add-trainings/AddTrainingForm';
 import TrainingView from '../components/TrainingView';
 import { colors } from '../utils/colors';
 import { Ionicons } from '@expo/vector-icons';
+import { Pressable } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { fetchTrainings } from '../features/trainings/trainingsSlice';
 
 
 const BottomTab = createBottomTabNavigator()
@@ -48,6 +51,9 @@ export const BottomTabNavigator = () => {
 const TrainingsListStack = createStackNavigator()
 
 const TrainingsListNavigator = () => {
+
+    const dispatch = useDispatch()
+
     return (
         <TrainingsListStack.Navigator >
             <TrainingsListStack.Screen 
@@ -61,7 +67,12 @@ const TrainingsListNavigator = () => {
                         borderBottomColor: colors.orange
                     },
                     headerTintColor: colors.white,
-                    animationEnabled: false
+                    animationEnabled: false,
+                    headerRight: () => (
+                        <Pressable style={{marginRight: 10}} onPress={() => dispatch(fetchTrainings())}>
+                            <Ionicons name='refresh' size={32} color={colors.white} />
+                        </Pressable>
+                    )
                 }}
             />
             <TrainingsListStack.Screen 

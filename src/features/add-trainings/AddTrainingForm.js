@@ -8,49 +8,48 @@ import { Ionicons } from '@expo/vector-icons';
 import { addExercise, setTrainingType, logTraining, resetTraining } from './addTrainingSlice'
 import ExerciseForm from '../../components/ExerciseForm'
 import AddExerciseModal from '../../components/AddExerciseModal'
-import { addNewTraining } from '../../parse-api/parseapi'
 import SelectTrainingModal from '../../components/SelectTrainingModal'
+import { addTraining } from '../trainings/trainingsSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 export default function AddTrainingForm({navigation}) {
 
     const [showAddExerciseModal, setShowAddExerciseModal] = useState(false)
     const [showSelectTrainingModal, setShowSelectTrainingModal] = useState(false)
+    const [addRequestStatus, setAddRequestStatus] = useState('idle')
 
     const trainingTypes = useSelector(state => state.trainingTypes)
     const training = useSelector(state => state.addTraining)
     const hasSelectedTrainingType = training.name !== undefined
     const exercises = useSelector(state => state.addTraining.exercises)
-    const hasExercise = exercises.length > 0
+    const canSave = exercises.length > 0 && addRequestStatus === 'idle'
     const trainingName = trainingTypes.find(element => element.key === training.name)?.name ?? training.name
 
-
     const dispatch = useDispatch()
-
-
-    const getFormattedDate = () => {
-        const today = new Date();
-        const dd = String(today.getDate()).padStart(2, '0');
-        const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-        const yyyy = today.getFullYear();
-
-        return dd + '.' + mm + '.' + yyyy;
-    }
-
-    const onChange = (option) => {
-        if(option !== undefined){
-            dispatch(setTrainingType(trainingTypes[option].id))
-        }
-        
-    }
 
     const onPressAddExercise = () => {
         setShowAddExerciseModal(true)
     }
 
-    const onPressFinishTraining = () => {
-        addNewTraining(training)
-        dispatch(resetTraining())
-        navigation.navigate("TrainingsList")
+    const onPressFinishTraining = async () => {
+        try {
+            setAddRequestStatus('loading')
+
+            const resultAction = await dispatch(addTraining(training))
+            unwrapResult(resultAction)
+
+            dispatch(resetTraining())
+            navigation.navigate("TrainingsList")
+
+
+        } catch (err) {
+            console.error('Failed to save the training: ', err)
+            alert("Error")
+        } finally {
+            setAddRequestStatus('idle')
+        }
+
+        
     }
 
     return (
@@ -59,7 +58,7 @@ export default function AddTrainingForm({navigation}) {
                 <Pressable onPress={() => setShowSelectTrainingModal(true)}>
                     <Text style={styles.name}>{hasSelectedTrainingType ? trainingName : "Select training type.."}</Text>
                 </Pressable>
-                <Text style={styles.date}>{getFormattedDate()}</Text>
+                <Text style={styles.date}>{new Date().toLocaleDateString()}</Text>
             </View>
             <View style={styles.contentContainer}>
                 <FlatList
@@ -74,8 +73,8 @@ export default function AddTrainingForm({navigation}) {
                 <Pressable disabled={!hasSelectedTrainingType} onPress={onPressAddExercise}>
                     <Ionicons name="add-circle" size={48} color={hasSelectedTrainingType ? colors.orange : colors.mediumDark} />
                 </Pressable>
-                <Pressable disabled={!hasExercise} onPress={onPressFinishTraining}>
-                    <Ionicons name="checkmark-circle" size={48} color={hasExercise ? colors.orange : colors.mediumDark} />
+                <Pressable disabled={!canSave} onPress={onPressFinishTraining}>
+                    <Ionicons name="checkmark-circle" size={48} color={canSave ? colors.orange : colors.mediumDark} />
                 </Pressable>
             </View>
             {showAddExerciseModal &&
