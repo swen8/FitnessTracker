@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, Modal, Pressable, StyleSheet, Text, View } from 'react-native'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import { colors } from '../../utils/colors'
 import { Ionicons } from '@expo/vector-icons';
@@ -83,6 +83,13 @@ export default function AddTrainingForm({navigation}) {
             {showSelectTrainingModal &&
                 <SelectTrainingModal setShowModal={setShowSelectTrainingModal} dispatchFunction={setTrainingType} text="Training Name"/>
             }
+            {addRequestStatus !== 'idle' && 
+                <Modal transparent={true}>
+                    <View style={styles.activityIndicatorContainer}>
+                        <ActivityIndicator size='large' color={colors.mediumWhite}/>
+                    </View>
+                </Modal>
+            }
         </View>
     )
 }
@@ -131,5 +138,10 @@ const styles = StyleSheet.create({
     },
     dummyView: {
         width: 48
+    },
+    activityIndicatorContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
